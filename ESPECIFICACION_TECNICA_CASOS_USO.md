@@ -119,13 +119,20 @@ request.setAttribute("error", "Mensaje de error");
 request.setAttribute("facciones", listaFacciones);
 ```
 
-**🔄 DIAGRAMA DE SECUENCIA SIMPLIFICADO:**
-```
-Usuario -> JSP -> Servlet -> Controller -> Service -> DAO -> DB
-   |        |        |          |          |        |      |
-   |--------|--------|----------|----------|--------|------|
-   GET      POST     validate   process    verify   INSERT response
-```
+### 🔗 Flujo de Datos (request → persistencia → sesión)
+
+- Entrada HTTP (POST en `/register`):
+  - email:String, password:String, confirmPassword:String, nombre:String, apellido:String, faccionId:int
+- Servlet construye DTO:
+  - `UserRegistrationDTO { email, rawPassword, confirmPassword, nombre, apellido, faccionId }`
+- Controller transforma a Entidad y valida:
+  - `UserDAO.existsByEmail(email)`; facción válida; `BCrypt.hashpw(...)`
+  - `User { email, passwordHash, nombre, apellido, faccionId, tipoUsuario=PASAJERO, activo=true, verificado=false }`
+- Persistencia:
+  - `UserDAO.create(User)` → INSERT en `usuarios` → retorna `User` con `id`
+- Respuesta:
+  - Éxito: `session.setAttribute("user", User)` y redirect `/dashboard`
+  - Error: `request.setAttribute("errorMessage")` y forward a `register.jsp` con `formData`
 
 ---
 
