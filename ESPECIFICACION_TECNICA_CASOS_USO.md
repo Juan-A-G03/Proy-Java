@@ -41,45 +41,40 @@ SERVLET: RegisterServlet.java
 │   ├── nombre (String)
 │   ├── apellido (String)
 │   └── faccionId (int)
-├── Validaciones:
+├── Validaciones básicas:
 │   ├── ValidationUtil.validateEmail(email)
 │   ├── ValidationUtil.validatePassword(password)
 │   ├── ValidationUtil.validateName(nombre)
 │   └── ValidationUtil.validateName(apellido)
-└── Controller llamado: UsuarioController.registrarUsuario()
+└── Controller llamado: UserController.validateAndRegister()
 ```
 
-#### **PASO 3: Lógica de Negocio**
+#### **PASO 3: Lógica de Negocio en Controller**
 ```
-CONTROLLER: UsuarioController.java
-├── Método: registrarUsuario(UsuarioDTO usuario)
+CONTROLLER: UserController.java
+├── Método: registerUser(UserRegistrationDTO userData)
 ├── Validaciones de negocio:
-│   ├── Verificar email único
-│   ├── Validar facción existe
-│   └── Hashear password
-├── Servicios utilizados:
-│   ├── UsuarioService.existeEmail(email)
-│   ├── FaccionService.existeFaccion(faccionId)
-│   └── PasswordUtil.hashPassword(password)
-└── DAO llamado: UsuarioDAO.insertar(usuario)
+│   ├── Verificar email único usando UserDAO.existsByEmail()
+│   ├── Validar facción existe usando FactionDAO.existsById()
+│   ├── Hashear password usando BCrypt
+│   └── Asignar valores por defecto (tipo='PASAJERO', activo=true)
+├── DAO llamado: UserDAO.create(User user)
+└── Retorna: User creado o lanza Exception
 ```
 
 #### **PASO 4: Acceso a Datos**
 ```
-DAO: UsuarioDAOImpl.java
-├── Método: insertar(Usuario usuario)
-├── Query SQL:
+DAO: UserDAO.java (Interface) / UserDAOImpl.java (Implementación)
+├── Método: create(User user)
+├── Método auxiliar: existsByEmail(String email)
+├── Query SQL principal:
 │   INSERT INTO usuarios (email, password_hash, nombre, apellido, 
 │   faccion_id, tipo_usuario, activo, verificado) 
 │   VALUES (?, ?, ?, ?, ?, 'PASAJERO', true, false)
-├── Parámetros PreparedStatement:
-│   ├── 1: usuario.getEmail()
-│   ├── 2: usuario.getPasswordHash()
-│   ├── 3: usuario.getNombre()
-│   ├── 4: usuario.getApellido()
-│   └── 5: usuario.getFaccionId()
+├── Query auxiliar:
+│   SELECT COUNT(*) FROM usuarios WHERE email = ?
 ├── Tabla afectada: usuarios
-└── Retorna: boolean (éxito/fracaso)
+└── Retorna: User con ID generado o null si falla
 ```
 
 #### **PASO 5: Respuesta al Usuario**
@@ -87,16 +82,16 @@ DAO: UsuarioDAOImpl.java
 SERVLET: RegisterServlet.java (continuación)
 ├── Si éxito:
 │   ├── Crear sesión HTTP
-│   ├── Atributo: "usuario" = usuarioCompleto
+│   ├── Atributo: "user" = userCompleto
 │   └── Redirect: response.sendRedirect("/flysolo/dashboard")
 ├── Si error:
-│   ├── Atributo: "error" = mensaje específico
-│   ├── Cargar datos del formulario
-│   └── Forward: /jsp/auth/register.jsp
+│   ├── Atributo: "errorMessage" = mensaje específico
+│   ├── Atributo: "formData" = datos del formulario
+│   └── Forward: request.getRequestDispatcher("/jsp/auth/register.jsp")
 └── Variables de respuesta:
     ├── success (boolean)
-    ├── error (String)
-    └── usuario (Usuario object)
+    ├── errorMessage (String)
+    └── user (User object)
 ```
 
 **🛡️ VALIDACIONES Y EXCEPCIONES:**
