@@ -1,0 +1,405 @@
+UNIVERSIDAD [NOMBRE DE TU UNIVERSIDAD]
+FACULTAD DE [NOMBRE DE FACULTAD]
+CARRERA: [NOMBRE DE CARRERA]
+
+PROPUESTA DE PROYECTO FINAL
+SISTEMA DE GESTIÓN DE TRANSPORTE ESPACIAL "FLYSOLO"
+
+Estudiante: Gallucci Juan Augusto
+Legajo: 50949
+Materia: Lenguaje de Programacion Java
+Profesor: Meca Adrian, Tabacman Ricardo
+Fecha: 3 de Octubre, 2025
+
+==============================================================================
+1. RESUMEN EJECUTIVO
+==============================================================================
+
+"FlySolo" es una aplicación web de gestión de transporte espacial ambientada en el universo Star Wars. El sistema funcionará como una plataforma de matching entre usuarios que necesitan transporte (personal o de carga) y pilotos independientes, similar a Uber, pero con características distintivas propias del contexto galáctico.
+
+La aplicación implementará un sistema de facciones políticas (Imperio Galáctico, Alianza Rebelde, Neutrales) que determinará la visibilidad y acceso a los servicios, creando un ecosistema único donde la afiliación política influye directamente en las transacciones comerciales.
+
+TECNOLOGÍAS PROPUESTAS:
+- Backend: Java 21 con arquitectura monolítica
+- Framework: Servlets + JSP + Maven
+- Base de Datos: MySQL 8.0
+- Servidor: Apache Tomcat 10.1
+- IDE: Eclipse Enterprise
+
+==============================================================================
+2. JUSTIFICACIÓN DEL PROYECTO
+==============================================================================
+
+RELEVANCIA ACADÉMICA:
+Este proyecto habra conocimientos en:
+- Programación orientada a objetos con Java
+- Arquitectura de aplicaciones web con patrón MVC
+- Diseño de bases de datos relacionales complejas
+- Implementación de lógica de negocio con múltiples roles de usuario
+- Gestión de estados y flujos de procesos
+- Seguridad web y autenticación de usuarios
+
+COMPLEJIDAD TÉCNICA ADECUADA:
+- Múltiples entidades relacionadas (10+ tablas en base de datos)
+- Sistema de roles con permisos diferenciados
+- Lógica de negocio compleja con estados de transición
+- Cálculos matemáticos para distancias y precios
+- Interfaz web responsive con múltiples vistas
+
+ORIGINALIDAD:
+El sistema de facciones políticas que afecta la visibilidad de servicios es un diferenciador único que agrega complejidad técnica y narrativa al proyecto tradicional de gestión.
+
+==============================================================================
+3. ANÁLISIS DEL DOMINIO
+==============================================================================
+
+PROBLEMÁTICA A RESOLVER:
+En un universo fragmentado por la guerra entre el imperio y la revelion galáctica, el transporte espacial enfrenta:
+- Desconfianza entre facciones políticas antagónicas
+- Dificultad para encontrar pilotos confiables y verificados
+- Cálculo manual complejo de rutas y costos interplanetarios
+- Falta de sistema centralizado de reputación y verificación
+
+SOLUCIÓN PROPUESTA:
+FlySolo centraliza y automatiza el ecosistema de transporte espacial mediante:
+- Plataforma unificada con segregación inteligente por facciones
+- Sistema de verificación automática de pilotos y capacidades
+- Cálculo automático de distancias 3D y precios dinámicos
+- Sistema de reputación bidireccional (piloto ↔ usuario)
+- Gestión integral de flota, armamento y modificaciones
+
+USUARIOS DEL SISTEMA:
+1. PASAJEROS: Ciudadanos que necesitan transporte personal
+2. PILOTOS: Proveedores de servicios de transporte
+3. ADMINISTRADORES: Gestores de la plataforma y recursos
+
+FUNCIONALIDADES PRINCIPALES:
+- Registro diferenciado por tipo de usuario y facción
+- Solicitud y gestión de viajes con múltiples estados
+- Sistema de matching basado en compatibilidad de facciones
+- Proceso de aprobación de pilotos por administradores
+- Gestión de naves, asignación y modificaciones
+- Sistema de reseñas y calificaciones
+- Panel administrativo para supervisión general
+
+==============================================================================
+4. ARQUITECTURA TÉCNICA
+==============================================================================
+
+STACK TECNOLÓGICO SELECCIONADO:
+
+Backend:
+- Lenguaje: Java 21 (LTS)
+- Arquitectura: Monolítica con patrón MVC
+- Servlets para controladores HTTP
+- JSP para vistas dinámicas
+- Maven para gestión de dependencias
+
+Base de Datos:
+- Motor: MySQL 8.0
+- 15+ tablas con relaciones complejas
+
+Frontend:
+- JSP con JSTL para lógica de presentación
+- HTML5 + CSS3 para estructura y estilos
+(- JavaScript para interactividad del cliente
+- Diseño responsive para múltiples dispositivos) si el frontend se hace con react
+
+Servidor:
+- Apache Tomcat 10.1
+- Compatible con Jakarta EE 10
+- Configuración de filtros de seguridad
+- Gestión de sesiones HTTP
+
+PATRONES DE DISEÑO A IMPLEMENTAR:
+- DAO (Data Access Object) para acceso a datos
+- Factory para creación de objetos
+- Observer para notificaciones
+- State Machine para gestión de estados de viaje
+- Singleton para configuraciones
+
+ESTRUCTURA DEL PROYECTO:
+```
+src/main/java/com/flysolo/
+├── config/          # Configuraciones de aplicación
+├── models/          # Entidades y DTOs
+├── dao/             # Capa de acceso a datos
+├── services/        # Lógica de negocio
+├── servlets/        # Controladores HTTP
+├── filters/         # Filtros de seguridad
+├── utils/           # Utilidades generales
+└── listeners/       # Listeners de eventos
+
+src/main/webapp/
+├── jsp/             # Vistas JSP organizadas por módulo
+├── css/             # Hojas de estilo
+├── js/              # Scripts JavaScript
+└── images/          # Recursos gráficos
+```
+
+==============================================================================
+5. DISEÑO DE BASE DE DATOS
+==============================================================================
+
+ENTIDADES PRINCIPALES:
+
+USUARIOS (tabla padre):
+- Datos básicos: email, password, nombre, apellido
+- Afiliación: facción política
+- Tipo: PASAJERO | PILOTO | ADMIN
+- Estados: activo, verificado
+
+PERFILES_PILOTO:
+- Información detallada para solicitud
+- Experiencia y licencias
+- Preferencias laborales
+- Estado de aprobación
+- Métricas de reputación
+
+VIAJES:
+- Origen y destino (planetas)
+- Tipo: PASAJERO | CARGA
+- Timing: INMEDIATO | PROGRAMADO
+- Estados: PENDIENTE | CONFIRMADO | EN_CURSO | COMPLETADO
+- Cálculos automáticos: distancia, tiempo, precio
+- Soporte para misiones encubiertas
+
+NAVES:
+- Tipos predefinidos con características
+- Instancias específicas asignadas a pilotos
+- Modificaciones y armamento
+- Ubicación actual en el universo
+
+SISTEMAS_SOLARES y PLANETAS:
+- Coordenadas 3D para cálculos de distancia
+- Información descriptiva y poblacional
+- Control por facciones
+
+RELACIONES CLAVE:
+- Usuario 1:1 PerfilPiloto (opcional)
+- Piloto 1:1 Nave (cuando está aprobado)
+- Viaje N:1 Usuario (solicitante)
+- Viaje N:1 Piloto (proveedor)
+- Viaje 1:N Reseñas
+- Nave N:M Armamento
+
+CARACTERÍSTICAS AVANZADAS:
+- Triggers para actualización automática de ratings
+- Vistas para consultas complejas optimizadas
+- Funciones para cálculos matemáticos
+- Índices estratégicos para rendimiento
+- Logs de auditoría para trazabilidad
+
+==============================================================================
+6. FLUJOS DE NEGOCIO PRINCIPALES
+==============================================================================
+
+FLUJO 1: REGISTRO DE USUARIO
+1. Usuario accede al formulario de registro
+2. Selecciona tipo (PASAJERO inicialmente)
+3. Elige facción política (IMPERIO | REBELDES | NEUTRALES)
+4. Sistema valida datos y crea cuenta
+5. Auto-login y redirección a dashboard
+
+FLUJO 2: SOLICITUD PARA SER PILOTO
+1. Usuario pasajero solicita upgrade a piloto
+2. Completa formulario detallado de experiencia
+3. Sistema registra solicitud en estado PENDIENTE
+4. Administrador revisa y evalúa perfil
+5. Si aprueba: asigna nave según preferencias
+6. Piloto recibe acceso a funcionalidades avanzadas
+
+FLUJO 3: CREACIÓN DE VIAJE
+1. Usuario especifica origen y destino
+2. Selecciona tipo (PASAJERO/CARGA) y timing
+3. Sistema calcula automáticamente distancia y precio
+4. Opción de crear misión encubierta (solo facciones específicas)
+5. Viaje queda en estado PENDIENTE
+6. Notificación a pilotos elegibles
+
+FLUJO 4: MATCHING Y ACEPTACIÓN
+1. Pilotos ven viajes según lógica de facciones:
+   - Viajes normales: visibles para TODOS los pilotos
+   - Misiones encubiertas: solo facciones autorizadas
+2. Piloto evalúa compatibilidad y acepta viaje
+3. Sistema verifica capacidad de nave y disponibilidad
+4. Viaje cambia a CONFIRMADO con timer de llegada
+5. Piloto debe llegar a punto de origen en tiempo límite
+
+FLUJO 5: EJECUCIÓN DE VIAJE
+1. Piloto llega a ubicación → estado EN_CURSO
+2. Sistema realiza seguimiento del viaje
+3. Al llegar a destino → estado COMPLETADO
+4. Usuario puede dejar reseña opcional
+5. Sistema actualiza ratings y estadísticas
+
+FLUJO 6: GESTIÓN ADMINISTRATIVA
+1. Admin revisa solicitudes de pilotos pendientes
+2. Evalúa perfiles según criterios establecidos
+3. Asigna naves disponibles a pilotos aprobados
+4. Gestiona solicitudes de cambio de nave/armamento
+5. Supervisa actividad general de la plataforma
+
+==============================================================================
+7. CASOS DE USO TÉCNICOS ESPECÍFICOS
+==============================================================================
+
+LÓGICA DE FACCIONES (Diferenciador clave):
+- Viajes normales: visibles para todos los pilotos
+- Misiones encubiertas: visibilidad restringida por facción
+- Ejemplos:
+  * Misión rebelde: solo pilotos REBELDES y NEUTRALES
+  * Operación imperial: solo pilotos IMPERIO
+  * Exclusión total: IMPERIO no puede ver misiones REBELDES
+
+CÁLCULO DE DISTANCIAS:
+- Fórmula euclidiana 3D: √[(x2-x1)² + (y2-y1)² + (z2-z1)²]
+- Precio base: distancia × tarifa por parsec × multiplicadores
+- Factores de ajuste: tipo de viaje, urgencia, carga/pasajeros
+- Premium pricing: +20% para viajes inmediatos
+
+GESTIÓN DE ESTADOS:
+Máquina de estados para viajes con transiciones controladas:
+- PENDIENTE → CONFIRMADO (piloto acepta)
+- CONFIRMADO → EN_CURSO (piloto llega a origen)
+- EN_CURSO → COMPLETADO (llega a destino)
+- Cualquier estado → CANCELADO (por usuario/piloto)
+- CONFIRMADO → EXPIRADO (piloto no llega a tiempo)
+
+SISTEMA DE REPUTACIÓN:
+- Rating de 1-5 estrellas en múltiples categorías
+- Cálculo automático de promedio con triggers
+- Impacto en visibilidad y preferencia de matching
+- Historial completo de reseñas
+
+==============================================================================
+8. PLAN DE DESARROLLO
+==============================================================================
+
+FASE 1: CONFIGURACIÓN BASE (Semana 1)
+- Setup del proyecto Maven en Eclipse
+- Configuración de base de datos MySQL
+- Implementación de modelos básicos (Usuario, Faccion)
+- Conexión a base de datos con HikariCP
+
+FASE 2: AUTENTICACIÓN Y USUARIOS (Semana 2)
+- Servlets de login/register/logout
+- JSPs básicas para autenticación
+- Sistema de sesiones y filtros de seguridad
+- Validación de formularios
+
+FASE 3: GESTIÓN DE PILOTOS (Semana 3)
+- Formulario de solicitud de piloto
+- Panel administrativo de aprobaciones
+- Gestión de naves y asignaciones
+- DAOs para entidades de pilotos y naves
+
+FASE 4: SISTEMA DE VIAJES (Semana 4)
+- Creación y listado de viajes
+- Lógica de matching por facciones
+- Aceptación y cambios de estado
+- Cálculos de distancia y precios
+
+FASE 5: INTERFAZ Y EXPERIENCIA (Semana 5)
+- Dashboards diferenciados por rol
+- Mejoras en diseño y usabilidad
+- Sistema de notificaciones
+- Validaciones JavaScript
+
+FASE 6: FUNCIONALIDADES AVANZADAS (Semana 6)
+- Misiones encubiertas
+- Sistema de reseñas
+- Reportes administrativos
+- Optimizaciones de rendimiento
+
+FASE 7: TESTING Y REFINAMIENTO (Semana 7)
+- Testing integral de todos los flujos
+- Corrección de bugs y mejoras
+- Documentación técnica
+- Preparación de presentación
+
+==============================================================================
+9. RIESGOS Y MITIGACIONES
+==============================================================================
+
+RIESGO TÉCNICO: Complejidad de la lógica de facciones
+MITIGACIÓN: Implementar paso a paso, comenzar con casos simples
+
+RIESGO TEMPORAL: Alcance muy amplio para el tiempo disponible
+MITIGACIÓN: Priorizar funcionalidades core, dejar extras para extensiones
+
+RIESGO DE INTEGRACIÓN: Problemas de compatibilidad entre tecnologías
+MITIGACIÓN: Configuración temprana y testing continuo
+
+RIESGO DE DATOS: Diseño de BD inadecuado para requerimientos
+MITIGACIÓN: Validación del schema con casos de uso reales
+
+==============================================================================
+10. RESULTADOS ESPERADOS
+==============================================================================
+
+ENTREGABLES TÉCNICOS:
+- Aplicación web completamente funcional
+- Código fuente documentado y organizado
+- Base de datos con datos de prueba
+- Manual de instalación y configuración
+
+DEMOSTRACIÓN DE COMPETENCIAS:
+- Diseño de arquitectura de software escalable
+- Implementación de lógica de negocio compleja
+- Manejo de múltiples tecnologías integradas
+- Capacidad de análisis y resolución de problemas
+
+FUNCIONALIDADES MÍNIMAS GARANTIZADAS:
+- Registro e inicio de sesión de usuarios
+- Gestión básica de viajes (crear, listar, aceptar)
+- Panel administrativo para aprobación de pilotos
+- Sistema de facciones operativo
+- Cálculos automáticos de precios
+
+FUNCIONALIDADES OBJETIVO (si el tiempo lo permite):
+- Misiones encubiertas completamente implementadas
+- Sistema de reseñas y reputación
+- Interfaz pulida y responsive
+- Reportes administrativos avanzados
+
+==============================================================================
+11. CONSULTAS PARA EL PROFESOR
+==============================================================================
+
+ORIENTACIÓN TÉCNICA:
+1. ¿Considera apropiado el stack tecnológico elegido para este proyecto?
+2. ¿El alcance planteado es realista para el tiempo disponible?
+3. ¿Sugiere alguna modificación en la arquitectura propuesta?
+
+CRITERIOS DE EVALUACIÓN:
+4. ¿Qué aspectos técnicos valorará más en la evaluación?
+5. ¿Es necesario implementar algún patrón de diseño específico?
+6. ¿Qué nivel de documentación técnica espera?
+
+GESTIÓN DEL PROYECTO:
+7. ¿Recomienda alguna metodología particular para el desarrollo?
+8. ¿Con qué frecuencia sugiere realizar presentaciones de avance?
+9. ¿Hay algún riesgo técnico que debería considerar especialmente?
+
+EXTENSIONES POSIBLES:
+10. Si el desarrollo avanza más rápido de lo esperado, ¿qué funcionalidades adicionales serían más valiosas?
+11. ¿Considera viable una eventual migración del frontend a React como extensión?
+
+==============================================================================
+12. ANEXOS
+==============================================================================
+
+ANEXO A: Diagrama entidad-relación de base de datos
+ANEXO B: Mockups básicos de interfaz principal
+ANEXO C: Esquema detallado de casos de uso
+ANEXO D: Cronograma detallado de desarrollo
+
+==============================================================================
+
+NOTAS FINALES:
+
+Agradezco de antemano su orientación y feedback para asegurar que este proyecto cumpla con las expectativas académicas y sea una experiencia de aprendizaje valiosa.
+
+Gallucci Juan Augusto
+3 de Octubre - 2025
